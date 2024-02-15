@@ -10,29 +10,43 @@ export async function Vote({ postId, votes }) {
 
   async function upvote() {
     "use server";
-    const session = await auth();
-    console.log("Upvote", postId, "by user", session.user.id);
-    await db.query(
-      "INSERT INTO votes (user_id, post_id, vote, vote_type) VALUES ($1, $2, $3, $4)",
-      [session.user.id, postId, 1, "post"]
-    );
+    try {
+      const session = await auth();
+      console.log("Upvote", postId, "by user", session.user.id);
+      await db.query(
+        "INSERT INTO votes (user_id, post_id, vote, vote_type) VALUES ($1, $2, $3, $4)",
+        [session.user.id, postId, 1, "post"]
+      );
 
-    revalidatePath("/");
-    revalidatePath(`/post/${postId}`);
+      revalidatePath("/");
+      revalidatePath(`/post/${postId}`);
+    } catch (error) {
+      return {
+        message: "You have already voted",
+      };
+    }
   }
 
   async function downvote() {
     "use server";
-    const session = await auth();
-    console.log("Downvote", postId, "by user", session.user.id);
-    await db.query(
-      "INSERT INTO votes (user_id, post_id, vote, vote_type) VALUES ($1, $2, $3, $4)",
-      [session.user.id, postId, -1, "post"]
-    );
+    try {
+      const session = await auth();
+      console.log("Downvote", postId, "by user", session.user.id);
+      await db.query(
+        "INSERT INTO votes (user_id, post_id, vote, vote_type) VALUES ($1, $2, $3, $4)",
+        [session.user.id, postId, -1, "post"]
+      );
 
-    revalidatePath("/");
-    revalidatePath(`/post/${postId}`);
+      revalidatePath("/");
+      revalidatePath(`/post/${postId}`);
+    } catch (error) {
+      return {
+        message: "You have already voted",
+      };
+    }
   }
+
+  // NH - added try catch to vote function to catch the constraint error, have not yet rendered error onto page to alert user that they can only vote once
 
   return (
     <>

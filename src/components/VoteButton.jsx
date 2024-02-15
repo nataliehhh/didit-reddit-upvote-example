@@ -14,4 +14,4 @@ export function VoteButton({ label, session }) {
     </button>
   );
 }
-// NH - added conditional based on session to disable button if user not logged in, also added styling for disabled button
+// NH - added conditional based on session to disable button if user not logged in, also added styling for disabled button. Opted for this as apposed to error message for better user experience rather than failed click and error or taken away from page

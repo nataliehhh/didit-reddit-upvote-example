@@ -77,5 +77,6 @@ CREATE TABLE votes (
     vote SMALLINT CHECK (vote IN (-1, 1)),
     vote_type VARCHAR(255) CHECK (vote_type IN ('post', 'comment')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(user_id, post_id, comment_id, vote_type)
+    CONSTRAINT unique_vote_per_user_post_comment_type UNIQUE(user_id, post_id, comment_id, vote_type)
 );
+-- NH - Added constraint to votes table to allow only unique combinations of user_id, post_id, comment_id, vote_type
