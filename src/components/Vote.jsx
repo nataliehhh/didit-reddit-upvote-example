@@ -4,6 +4,10 @@ import { revalidatePath } from "next/cache";
 import { VoteButton } from "./VoteButton";
 
 export async function Vote({ postId, votes }) {
+  // NH - fetching session outside of the functions to pass as prop to vote buttons
+  const session = await auth();
+  console.log(session);
+
   async function upvote() {
     "use server";
     const session = await auth();
@@ -35,10 +39,10 @@ export async function Vote({ postId, votes }) {
       {votes} votes
       <div className="flex space-x-3">
         <form action={upvote}>
-          <VoteButton label="Upvote" />
+          <VoteButton label="Upvote" session={session} />
         </form>
         <form action={downvote}>
-          <VoteButton label="Downvote" />
+          <VoteButton label="Downvote" session={session} />
         </form>
       </div>
     </>

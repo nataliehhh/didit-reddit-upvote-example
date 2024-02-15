@@ -3,6 +3,25 @@ import { CommentList } from "@/components/CommentList";
 import { Vote } from "@/components/Vote";
 import { db } from "@/db";
 
+// added dynamic metadata function to fetch post name and add to page title
+export async function generateMetadata({ params, searchParams }, parent) {
+  const postId = params.postId;
+
+  const { rows: posts } = await db.query(
+    `SELECT posts.title
+    FROM posts
+    JOIN users ON posts.user_id = users.id
+    WHERE posts.id = $1
+    GROUP BY posts.id, users.name
+    LIMIT 1;`,
+    [postId]
+  );
+
+  return {
+    title: `Didit | ${posts[0].title}`,
+  };
+}
+
 export default async function SinglePostPage({ params }) {
   const postId = params.postId;
 
